@@ -1,0 +1,37 @@
+class Solution:
+    def solve(self, board: List[List[str]]) -> None:
+        ROWS, COLS = len(board), len(board[0])
+        visited = set()
+
+        def dfs(r, c):
+            if (r < 0 or c < 0 or r == ROWS or c == COLS or
+            (r, c) in visited or board[r][c] != "O"):
+                return
+            # this O is reachable and should not be turned into X 
+            visited.add((r, c))
+            dfs(r + 1, c)
+            dfs(r - 1, c)
+            dfs(r, c + 1)
+            dfs(r, c - 1)
+
+
+        for r in range(ROWS):
+            if board[r][0] == "O":
+                visited.add((r, 0))
+                dfs(r, 0)
+            if board[r][COLS - 1] == "O":
+                visited.add((r, COLS - 1))
+                dfs(r, COLS - 1)
+                
+        for c in range(COLS):
+            if board[0][c] == "O":
+                visited.add((0, c))
+                dfs(0, c)
+            if board[ROWS - 1][c] == "O":
+                visited.add((ROWS - 1, c))
+                dfs(ROWS - 1, c)
+
+        for r in range(ROWS):
+            for c in range(COLS):
+                if (r, c) not in visited and board[r][c] == "O":
+                    board[r][c] = "X"
